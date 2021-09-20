@@ -5,8 +5,6 @@ namespace Statik;
 class Statik
 {
 	
-	protected $directory_filter = array( '.', '..' );
-
 	public function generateHTML( $source_path, $target_path, $template = false ) {
 
 		var_dump( $this->get_files( $source_path ) );
@@ -19,13 +17,13 @@ class Statik
 
 		$source_paths = $source_entries = array();
 
-		$out = array( 'all_paths' => array(), 'files' => array() );
+		$out = array( 'markdown_files' => array(), 'all_paths' => array() );
 
 		$dir = dir( $path );
 
 		while ( false !== ( $entry = $dir->read() ) ) {
 
-			if ( !in_array( $entry, $this->directory_filter ) ) {
+			if ( !str_starts_with( $entry, '.' ) ) {
 
 				$path = $dir->path . '/' . $entry;
 
@@ -33,9 +31,9 @@ class Statik
 
 					$out = array_merge( $out, $this->get_files( $path ) );
 
-				} else {
+				} elseif ( str_ends_with( $entry, '.md' ) ) {
 			
-					$out['files'][] = $path;
+					$out['markdown_files'][] = $path;
 
 				}
 
