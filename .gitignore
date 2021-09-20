@@ -17,3 +17,5 @@ Homestead.json
 /.vagrant
 
 .DS_Store
+
+/statik_test/
