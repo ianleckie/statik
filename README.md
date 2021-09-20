@@ -1,2 +1,2 @@
 # statik
-A command line Markdown to HTML batch processor
+ A command line Markdown to HTML batch processor
