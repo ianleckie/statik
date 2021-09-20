@@ -36,11 +36,11 @@ class Generate extends Command
 		
 		$source_directory = $this->argument( 'source_directory' );
 		$target_directory = $this->argument( 'target_directory' );
-		$template         = $this->option( 'template' );
+		$template         = (string) $this->option( 'template' );
 
 		$statik = new \Statik\Statik;
 
-		$result = $statik->generateHTML( $source_directory, $target_directory, $template );
+		$result = $statik->generateHTMLFiles( $source_directory, $target_directory, $template );
 
 		$this->info( $result );
 

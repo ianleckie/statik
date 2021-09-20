@@ -1,24 +1,28 @@
 <?php
 
+// TODO: set markdown extension in config?
+
 namespace Statik;
 
 class Statik
 {
+
+	protected $paths = array();
+	protected $markdown_extension = '.md';
 	
-	public function generateHTML( $source_path, $target_path, $template = false ) {
+	public function generateHTMLFiles( string $source_path, string $target_path, string $template = '' ) : string {
 
-		var_dump( $this->get_files( $source_path ) );
+		$this->getSourcePaths( $source_path );
+		
+		var_dump( $this->paths );
 
-		return 'DONE!';
+		return (string) 'DONE!';
 		
 	}
 
-	protected function get_files( string $path ) {
+	protected function getSourcePaths( string $path ) {
 
-		$source_paths = $source_entries = array();
-
-		$out = array( 'markdown_files' => array(), 'all_paths' => array() );
-
+		$out = array( 'markdown_files' => array(), 'all' => array() );
 		$dir = dir( $path );
 
 		while ( false !== ( $entry = $dir->read() ) ) {
@@ -29,15 +33,15 @@ class Statik
 
 				if ( is_dir( $path ) ) {
 
-					$out = array_merge( $out, $this->get_files( $path ) );
+					$out = array_merge( $out, $this->getSourcePaths( $path ) );
 
-				} elseif ( str_ends_with( $entry, '.md' ) ) {
+				} elseif ( str_ends_with( $entry, $this->markdown_extension ) ) {
 			
 					$out['markdown_files'][] = $path;
 
 				}
 
-				$out['all_paths'][] = $path;
+				$out['all'][] = $path;
 
 			}
 		
@@ -45,7 +49,9 @@ class Statik
 		
 		$dir->close();
 
-		return $out;
+		$this->paths = $out;
+
+		return (array) $out;
 
 	}
 
