@@ -38,9 +38,9 @@ class Generate extends Command
 		$target_directory = $this->argument( 'target_directory' );
 		$template         = (string) $this->option( 'template' );
 
-		$statik = new \Statik\Statik;
+		$statik = new \App\Statik;
 
-		$result = ( $statik->generateHTMLFiles( $source_directory, $target_directory, $template ) ) ? 'DONE!' : 'ERROR!';
+		$result = $statik->generateHTMLFiles( $source_directory, $target_directory, $template ) ? 'DONE!' : 'ERROR!';
 
 		$this->info( $result );
 

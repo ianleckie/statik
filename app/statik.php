@@ -1,8 +1,9 @@
 <?php
 
-// TODO: error handling, documentation, tests
+// TODO: error handling, comments, tests
+//	make HTML files before resting target directory... save to tmp first
 
-namespace Statik;
+namespace App;
 
 class Statik
 {
@@ -23,45 +24,15 @@ class Statik
 		$this->target_path = $target_path;
 		$this->template    = $template;
 
-		return (bool) ( $this->getMarkdownFiles( $source_path ) && $this->resetTargetDir() && $this->makeHTMLFiles() );
+		return (bool) $this->checkPaths() && $this->checkTemplateFile() && $this->getMarkdownFiles() && $this->resetTargetDir() && $this->makeHTMLFiles();
 		
-	}
-
-	protected function getMarkdownFiles( string $path ) {
-
-		$dir = dir( $path );
-
-		while ( false !== ( $entry = $dir->read() ) ) {
-
-			if ( !str_starts_with( $entry, '.' ) ) {
-
-				$path = $dir->path . '/' . $entry;
-
-				if ( is_dir( $path ) ) {
-
-					$this->markdown_files = array_merge( $this->markdown_files, $this->getMarkdownFiles( $path ) );
-
-				} elseif ( str_ends_with( $entry, config('statik')['markdown_extension'] ) ) {
-			
-					$this->markdown_files[] = $path;
-
-				}
-
-			}
-		
-		}
-		
-		$dir->close();
-
-		return (array) $this->markdown_files;
-
 	}
 
 	protected function makeHTMLFiles() {
 
-		foreach ( $this->markdown_files as $path ) {
+		foreach ( $this->markdown_files as $file ) {
 
-			$this->makeHTMLFile( $path );
+			if ( !$this->makeHTMLFile( $file ) ) return (bool) false;
 
 		}
 
@@ -69,28 +40,54 @@ class Statik
 
 	}
 
-	protected function makeHTMLFile( string $path ) {
+	protected function makeHTMLFile( object $file ) {
 
-		$html = $this->parsedown->text( file_get_contents( $path ) );
+		$html = $this->parsedown->text( \File::get( $file ) );
 
-		if ( $this->template ) $html = $this->mustache->render( file_get_contents( $this->template ), array( 'content' => $html ) );
+		if ( $this->template ) $html = $this->mustache->render( \File::get( $this->template ), array( 'content' => $html ) );
 
-		$out_path   = str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $path ) );
-		$path_parts = pathinfo( $out_path );
-		$out_dir    = $path_parts['dirname'];
+		$out_file = $this->sourceFileToTargetFile( $file );
 
-		if ( !is_dir( $out_dir ) ) mkdir( $out_dir, 0777, true );
-
-		return (bool) file_put_contents( $out_path, $html );
+		return (bool) $this->createTargetDirectory( $out_file ) && \File::put( $out_file, $html );
 
 	}
 
+	protected function createTargetDirectory( string $path ) {
+
+		$out_dir  = pathinfo( $path )['dirname'];
+
+		return (bool) \File::exists( $out_dir ) || \File::makeDirectory( $out_dir, 0777, true );
+	
+	}
+
+	/**
+	 * Ensures that both the source and target paths exist
+	 * 
+	 * @return bool
+	 */
+	protected function checkPaths() {
+		return (bool) \File::exists( $this->source_path ) && \File::exists( $this->target_path );
+	}
+
+	/**
+	 * If $this->template is set, make sure the file exists
+	 * 
+	 * @return bool
+	 */
+	protected function checkTemplateFile() {
+		return (bool) !( $this->template ) || \File::exists( $this->template );
+	}
+
+	protected function getMarkdownFiles() {
+		return (object) $this->markdown_files = \File::allFiles( $this->source_path );
+	}
+
 	protected function resetTargetDir() {
+		return (bool) \File::deleteDirectory( $this->target_path ) && \File::makeDirectory( $this->target_path );
+	}
 
-		shell_exec( 'rm -rf ' . $this->target_path );
-
-		return (bool) mkdir( $this->target_path );
-
+	protected function sourceFileToTargetFile( object $file ) {
+		return (string) str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $file ) );
 	}
 
 }
