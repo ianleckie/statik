@@ -40,7 +40,7 @@ class Generate extends Command
 
 		$statik = new \Statik\Statik;
 
-		$result = $statik->generateHTMLFiles( $source_directory, $target_directory, $template );
+		$result = ( $statik->generateHTMLFiles( $source_directory, $target_directory, $template ) ) ? 'DONE!' : 'ERROR!';
 
 		$this->info( $result );
 
