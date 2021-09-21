@@ -19,7 +19,8 @@
         "php": "^7.3|^8.0",
         "erusev/parsedown": "^1.7",
         "laminas/laminas-text": "^2.8",
-        "laravel-zero/framework": "^8.8"
+        "laravel-zero/framework": "^8.8",
+        "mustache/mustache": "^2.13"
     },
     "require-dev": {
         "mockery/mockery": "^1.4.3",
