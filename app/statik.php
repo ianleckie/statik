@@ -1,7 +1,6 @@
 <?php
 
 // TODO: comments, tests
-//	make HTML files before resting target directory... save to tmp first
 
 namespace App;
 
@@ -50,7 +49,7 @@ class Statik
 
 		if ( !\File::exists( $path ) ) {
 			$success = false;
-			$this->command->error('ERROR: Can\'t access path \'' . $path . '\'' );
+			$this->command->error( "ERROR: Can't access path '" . $path . "'" );
 		}
 
 		return (bool) $success;
@@ -69,10 +68,15 @@ class Statik
 		if ( $this->template != '' ) {
 
 			if ( !\File::exists( $this->template ) ) {
+				
 				$success = false;
-				$this->command->error('ERROR: Can\'t access template file \'' . $this->template . '\'' );
+				
+				$this->command->error( "ERROR: Can't access template file '" . $this->template . "'" );
+			
 			} else {
+				
 				$this->command->info( "\e[0;35mUsing template: \e[0;37m" . $this->template . "\e[0m" );
+			
 			}
 
 		}
@@ -110,7 +114,7 @@ class Statik
 
 		if ( $this->createTargetDirectory( $out_file ) && \File::put( $out_file, $html ) ) {
 
-			$this->command->info("\e[0;36mWriting file: \e[0;97m" . $out_file);
+			$this->command->info( "\e[0;36mWriting file: \e[0;97m" . $out_file );
 
 			return (bool) true;
 		
