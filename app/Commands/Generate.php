@@ -36,7 +36,7 @@ class Generate extends Command
 		$target_directory = $this->argument( 'target_directory' );
 		$template         = (string) $this->option( 'template' );
 
-		$statik = new \App\Statik;
+		$statik = new \App\Statik\Statik;
 
 		$statik->generateHTMLFiles( $this, $source_directory, $target_directory, $template ) && $this->info( "\e[1;32mDONE!" );
 
