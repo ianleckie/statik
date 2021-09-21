@@ -1,6 +1,6 @@
 <?php
 
-// TODO: template wrapping, error handling, documentation, tests
+// TODO: error handling, documentation, tests
 
 namespace Statik;
 
@@ -8,11 +8,12 @@ class Statik
 {
 
 	protected $markdown_files = array();
-	protected $parsedown, $source_path, $target_path, $template;
+	protected $parsedown, $mustache, $source_path, $target_path, $template;
 
 	public function __construct() {
 
 		$this->parsedown = new \Parsedown;
+		$this->mustache  = new \Mustache_Engine;
 
 	}
 	
@@ -72,7 +73,7 @@ class Statik
 
 		$html = $this->parsedown->text( file_get_contents( $path ) );
 
-		if ( $this->template ) var_dump('TPL');
+		if ( $this->template ) $html = $this->mustache->render( file_get_contents( $this->template ), array( 'content' => $html ) );
 
 		$out_path   = str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $path ) );
 		$path_parts = pathinfo( $out_path );
