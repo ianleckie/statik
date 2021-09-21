@@ -72,11 +72,11 @@ class Statik
 
 		$html = $this->parsedown->text( file_get_contents( $path ) );
 
-		$out_path = str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $path ) );
+		if ( $this->template ) var_dump('TPL');
 
+		$out_path   = str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $path ) );
 		$path_parts = pathinfo( $out_path );
-
-		$out_dir = $path_parts['dirname'];
+		$out_dir    = $path_parts['dirname'];
 
 		if ( !is_dir( $out_dir ) ) mkdir( $out_dir, 0777, true );
 
