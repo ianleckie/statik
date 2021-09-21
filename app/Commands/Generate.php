@@ -22,7 +22,7 @@ class Generate extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Markdown > HTML [source_dir target_dir] [-t template]';
+	protected $description = "Batch process Markdown to HTML\n";
 
 	/**
 	 * Execute the console command.
