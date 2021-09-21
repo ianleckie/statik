@@ -35,7 +35,7 @@ class Statik
 	}
 
 	/**
-	 * Ensures that both the source and target paths exist
+	 * Ensure that both the source and target paths exist
 	 * 
 	 * @return bool
 	 */
