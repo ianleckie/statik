@@ -40,7 +40,9 @@ class Statik
 	 * @return bool
 	 */
 	protected function checkPaths() {
+		
 		return (bool) $this->checkPath( $this->source_path ) && $this->checkPath( $this->target_path );
+	
 	}
 
 	protected function checkPath( string $path ) {
@@ -48,8 +50,11 @@ class Statik
 		$success = true;
 
 		if ( !\File::exists( $path ) ) {
+			
 			$success = false;
+			
 			$this->command->error( "ERROR: Can't access path '" . $path . "'" );
+		
 		}
 
 		return (bool) $success;
@@ -85,11 +90,15 @@ class Statik
 	}
 
 	protected function getMarkdownFiles() {
-		return (object) $this->markdown_files = \File::allFiles( $this->source_path );
+		
+		return (bool) ( $this->markdown_files = \File::allFiles( $this->source_path ) );
+	
 	}
 
 	protected function resetTargetDir() {
+		
 		return (bool) \File::deleteDirectory( $this->target_path ) && \File::makeDirectory( $this->target_path );
+	
 	}
 
 	protected function makeHTMLFiles() {
@@ -106,6 +115,8 @@ class Statik
 
 	protected function makeHTMLFile( object $file ) {
 
+		$success = false;
+
 		$html = $this->parsedown->text( \File::get( $file ) );
 
 		if ( $this->template ) $html = $this->mustache->render( \File::get( $this->template ), array( 'content' => $html ) );
@@ -116,13 +127,11 @@ class Statik
 
 			$this->command->info( "\e[0;36mWriting file: \e[0;97m" . $out_file );
 
-			return (bool) true;
+			$success = true;
 		
 		}
 
-		return (bool) false;
-
-		return (bool) $this->createTargetDirectory( $out_file ) && \File::put( $out_file, $html );
+		return (bool) $success;
 
 	}
 
@@ -135,6 +144,8 @@ class Statik
 	}
 
 	protected function sourceFileToTargetFile( object $file ) {
+		
 		return (string) str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $file ) );
+	
 	}
 }
