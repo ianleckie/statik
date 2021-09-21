@@ -5,8 +5,6 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-require_once __DIR__.'/../statik.php';
-
 class Generate extends Command
 {
 	/**
