@@ -214,11 +214,11 @@ class Statik
 
 		if ( $this->template ) $html = $this->mustache->render( \File::get( $this->template ), array( 'content' => $html ) );
 
-		$out_file = $this->sourceFileToTargetFile( $file );
+		$out_path = $this->sourceFileToTargetFile( $file );
 
-		if ( $this->createOutputDirectory( $out_file ) && \File::put( $out_file, $html ) ) {
+		if ( $this->createOutputDirectory( $out_path ) && \File::put( $out_path, $html ) ) {
 
-			$this->command->info( $this->ansi_colors['cyan'] . "Writing file: " . $this->ansi_colors['white'] . $out_file . $this->ansi_colors['reset'] );
+			$this->command->info( $this->ansi_colors['cyan'] . "Writing file: " . $this->ansi_colors['white'] . $out_path . $this->ansi_colors['reset'] );
 
 			$success = true;
 		
@@ -249,7 +249,7 @@ class Statik
 	 */
 	protected function sourceFileToTargetFile( SplFileInfo $file ) {
 		
-		return (string) str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, $file ) );
+		return (string) str_replace( config('statik')['markdown_extension'], '.html', str_replace( $this->source_path, $this->target_path, (string) $file ) );
 	
 	}
 }
