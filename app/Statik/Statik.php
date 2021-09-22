@@ -175,8 +175,6 @@ class Statik
 	 */
 	protected function resetTargetDir() {
 
-		// delete all .html files instead?
-		
 		return (bool) \File::deleteDirectory( $this->target_path ) && \File::makeDirectory( $this->target_path );
 	
 	}
@@ -218,7 +216,7 @@ class Statik
 
 		if ( $this->createOutputDirectory( $out_file ) && \File::put( $out_file, $html ) ) {
 
-			$this->command->info( $this->ansi_colors['cyan'] . "Writing file: " . $this->ansi_colors['white'] . $out_file );
+			$this->command->info( $this->ansi_colors['cyan'] . "Writing file: " . $this->ansi_colors['white'] . $out_file . $this->ansi_colors['reset'] );
 
 			$success = true;
 		
